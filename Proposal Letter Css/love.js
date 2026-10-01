@@ -564,7 +564,7 @@ function blink(){
 
 function reset(){
   catState = 'idle';
-  title.textContent = 'Happy 1 month, my love ♡ Still love me?';
+  title.textContent = 'Happy Graduation! ♡ You are adorable!';
   drawSprite(catCanvas, CAT_IDLE);
   catCanvas.setAttribute('aria-label', 'A little cat holding a heart');
   buttons.hidden = false;
