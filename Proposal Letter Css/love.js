@@ -11,6 +11,7 @@ const hintText      = $('hintText');
 const win           = $('window');
 const content       = $('content');
 const title         = $('title');
+const INITIAL_TITLE = 'Do you still remember me?';
 const catCanvas     = $('cat');
 const buttons       = $('buttons');
 const yesBtn        = $('yesBtn');
@@ -434,7 +435,7 @@ noBtn.addEventListener('focus', dodge);
 
 function sayYes(){
   catState = 'happy';
-  title.textContent = 'Yayyy! I Knew it ♡';
+  title.textContent = 'Happy Graduation! ♡ You are adorable!';
   drawSprite(catCanvas, CAT_HAPPY);
   catCanvas.setAttribute('aria-label', 'A happy cat with a bow');
 
@@ -564,7 +565,7 @@ function blink(){
 
 function reset(){
   catState = 'idle';
-  title.textContent = 'Happy Graduation! ♡ You are adorable!';
+  title.textContent = INITIAL_TITLE;
   drawSprite(catCanvas, CAT_IDLE);
   catCanvas.setAttribute('aria-label', 'A little cat holding a heart');
   buttons.hidden = false;
