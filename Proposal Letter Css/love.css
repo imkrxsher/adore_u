@@ -585,9 +585,9 @@ body{
   .content.is-won .cat,
   .content.is-won .cat-heart{ animation:none; }
   .confetti .heart{ animation:none; opacity:.55; }
-  .love-balloon{ animation:none; opacity:.75; }
   .window, .stage--aim, .final, .btn{ transition-duration:.001s; }
   .burst, .trail, .rainheart, .confetti-heart{ display:none; }
+  .love-balloons .burst{ display:block; }
   .brand{ transition:none; }
   .brand:hover, .brand:focus-visible{ transform:none; }
 }

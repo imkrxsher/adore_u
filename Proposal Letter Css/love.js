@@ -149,13 +149,10 @@ function spawnLoveBalloon(){
   balloon.style.left = `${rand(3, 97)}vw`;
   balloon.style.background = pick(LOVE_COLORS);
   balloon.style.animationDuration = `${rand(11, 17).toFixed(1)}s`;
-  if (reduceMotion) balloon.style.bottom = `${rand(8, 72)}vh`;
 
   balloon.addEventListener('click', () => {
     const rect = balloon.getBoundingClientRect();
-    if (!reduceMotion){
-      spawnBurst(loveBalloons, rect.left + rect.width / 2, rect.top + rect.height / 2, 9);
-    }
+    spawnBurst(loveBalloons, rect.left + rect.width / 2, rect.top + rect.height / 2, 9);
     balloon.remove();
   });
   balloon.addEventListener('animationend', () => balloon.remove());
