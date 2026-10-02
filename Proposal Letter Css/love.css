@@ -103,6 +103,40 @@ body{
   pointer-events:none;
   z-index:1;
 }
+.love-balloons{
+  position:fixed; inset:0;
+  overflow:hidden;
+  pointer-events:none;
+  z-index:1;
+}
+.love-balloon{
+  position:absolute;
+  bottom:-72px;
+  display:block;
+  border:0;
+  padding:0;
+  cursor:pointer;
+  pointer-events:auto;
+  filter:drop-shadow(0 4px 5px rgba(122,34,48,.2));
+  animation:balloonRise linear forwards;
+  will-change:transform,opacity;
+}
+.love-balloon::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:82%;
+  width:1px;
+  height:24px;
+  background:rgba(122,34,48,.42);
+}
+.love-balloon:focus-visible{ outline:2px dashed var(--maroon); outline-offset:5px; }
+@keyframes balloonRise{
+  0%{ opacity:0; transform:translate3d(0,0,0) rotate(-8deg) scale(.8); }
+  12%{ opacity:.88; }
+  50%{ transform:translate3d(22px,-55vh,0) rotate(8deg) scale(1); }
+  100%{ opacity:0; transform:translate3d(-14px,-115vh,0) rotate(-7deg) scale(1.08); }
+}
 .confetti__layer{ position:absolute; inset:0; will-change:transform; }
 .confetti .heart{
   position:absolute;
@@ -551,6 +585,7 @@ body{
   .content.is-won .cat,
   .content.is-won .cat-heart{ animation:none; }
   .confetti .heart{ animation:none; opacity:.55; }
+  .love-balloon{ animation:none; opacity:.75; }
   .window, .stage--aim, .final, .btn{ transition-duration:.001s; }
   .burst, .trail, .rainheart, .confetti-heart{ display:none; }
   .brand{ transition:none; }

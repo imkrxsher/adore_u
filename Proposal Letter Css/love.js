@@ -20,6 +20,7 @@ const finalText     = $('final');
 const closeBtn      = $('closeBtn');
 const confettiBox   = $('confetti');
 const rainBox       = $('rain');
+const loveBalloons  = $('loveBalloons');
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -134,6 +135,31 @@ function spawnConfetti(scale = 1){
     confettiBox.appendChild(layer);
     PARALLAX.push({ el: layer, factor: L.factor });
   }
+}
+
+function spawnLoveBalloon(){
+  if (loveBalloons.childElementCount >= 10) return;
+
+  const balloon = document.createElement('button');
+  const size = rand(30, 46);
+  balloon.type = 'button';
+  balloon.className = 'heart love-balloon';
+  balloon.setAttribute('aria-label', 'Pop a floating heart');
+  balloon.style.width = balloon.style.height = `${size}px`;
+  balloon.style.left = `${rand(3, 97)}vw`;
+  balloon.style.background = pick(LOVE_COLORS);
+  balloon.style.animationDuration = `${rand(11, 17).toFixed(1)}s`;
+  if (reduceMotion) balloon.style.bottom = `${rand(8, 72)}vh`;
+
+  balloon.addEventListener('click', () => {
+    const rect = balloon.getBoundingClientRect();
+    if (!reduceMotion){
+      spawnBurst(loveBalloons, rect.left + rect.width / 2, rect.top + rect.height / 2, 9);
+    }
+    balloon.remove();
+  });
+  balloon.addEventListener('animationend', () => balloon.remove());
+  loveBalloons.appendChild(balloon);
 }
 
 let pX = 0, pY = 0, parallaxRAF = 0;
@@ -586,6 +612,8 @@ function reset(){
 
 drawSprite(catCanvas, CAT_IDLE);
 spawnConfetti(reduceMotion ? 0.5 : 1);
+spawnLoveBalloon();
+setInterval(spawnLoveBalloon, 1500);
 
 if (!reduceMotion){
   window.addEventListener('pointermove', onParallax, { passive: true });
