@@ -279,6 +279,8 @@ body{
   border-right-color:transparent;
   transform-origin:100% 50%;
   transform:rotate(-90deg);
+  transition:transform .12s cubic-bezier(.22,.61,.36,1);
+  will-change:transform;
   filter:drop-shadow(0 3px 0 rgba(122,74,34,.22));
 }
 .bow::before{
@@ -309,7 +311,12 @@ body{
   pointer-events:none;
   opacity:0;
   will-change:transform;
+  transition:transform .12s cubic-bezier(.22,.61,.36,1), opacity .16s ease;
 }
+.stage--aim.is-drawing .bow,
+.stage--aim.is-drawing .arrow,
+.stage--aim.is-shooting .bow,
+.stage--aim.is-shooting .arrow{ transition:none; }
 .arrow.is-on{ opacity:1; }
 .arrow::after{
   content:"";

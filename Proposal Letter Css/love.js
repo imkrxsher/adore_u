@@ -205,7 +205,7 @@ const GRAVITY    = 0.03;
 const RECOIL_MS  = 220;
 const HIT_MARGIN = 22;
 
-function restAngle(m){ return clampAngle(Math.atan2(m.ty - m.ny, m.tx - m.nx)); }
+function restAngle(m){ return Math.atan2(m.ty - m.ny, m.tx - m.nx); }
 
 let angle = -Math.PI / 2;
 let aiming = false;
@@ -231,13 +231,6 @@ function metrics(){
   };
 }
 
-function clampAngle(a){
-  let d = a * 180 / Math.PI;
-  if (d >= 0) d = d <= 90 ? -10 : -170;
-  else { if (d > -10) d = -10; if (d < -170) d = -170; }
-  return d * Math.PI / 180;
-}
-
 function renderBow(deg, flex){
   bow.style.transform = `rotate(${deg}deg) scaleX(${flex})`;
 }
@@ -254,12 +247,13 @@ function renderAim(m){
 function updateAim(clientX, clientY){
   if (flying || attemptsLocked) return;
   const m = metrics();
-  angle = clampAngle(Math.atan2(clientY - m.top - m.ny, clientX - m.left - m.nx));
+  angle = Math.atan2(clientY - m.top - m.ny, clientX - m.left - m.nx);
   if (!aiming) drawn = 0;
   renderAim(m);
 }
 
 function startDraw(){
+  aimStage.classList.add('is-drawing');
   if (reduceMotion){ drawn = MAX_DRAW; renderAim(metrics()); return; }
   drawStartT = performance.now();
   if (!drawRAF) drawRAF = requestAnimationFrame(drawStep);
@@ -278,12 +272,15 @@ function drawStep(now){
 function release(){
   if (!aiming || flying || attemptsLocked) return;
   aiming = false;
+  aimStage.classList.remove('is-drawing');
   cancelAnimationFrame(drawRAF); drawRAF = 0;
   fire();
 }
 
 function fire(power){
   if (flying || attemptsLocked) return;
+  aimStage.classList.remove('is-drawing');
+  aimStage.classList.add('is-shooting');
   missPopup.hidden = true;
   if (power == null) power = clamp01((drawn - MIN_DRAW) / (MAX_DRAW - MIN_DRAW));
   flying = true;
@@ -366,6 +363,7 @@ function spawnTrail(x, y){
 
 function onHit(m, dir){
   cancelAnimationFrame(rafId);
+  aimStage.classList.remove('is-shooting');
   flying = false; drawn = 0;
   const a = (dir == null) ? angle : dir;
   const deg = a * 180 / Math.PI;
@@ -380,6 +378,7 @@ function onHit(m, dir){
 
 function onMiss(){
   cancelAnimationFrame(rafId);
+  aimStage.classList.remove('is-shooting');
   flying = false; drawn = 0;
   arrow.classList.remove('is-on');
   if (missCount === 0){
@@ -403,6 +402,7 @@ function resetAim(){
   cancelAnimationFrame(rafId);
   cancelAnimationFrame(drawRAF); drawRAF = 0;
   flying = false; aiming = false; missCount = 0; drawn = 0;
+  aimStage.classList.remove('is-drawing', 'is-shooting');
   attemptsLocked = false;
   missPopup.hidden = true;
   target.classList.remove('is-hit', 'is-pulse');
@@ -415,8 +415,9 @@ function resetAim(){
 aimStage.addEventListener('pointermove', (e) => { if (!flying) updateAim(e.clientX, e.clientY); });
 aimStage.addEventListener('pointerdown', (e) => {
   if (flying || attemptsLocked) return;
+  aimStage.setPointerCapture(e.pointerId);
   const m = metrics();
-  angle = clampAngle(Math.atan2(e.clientY - m.top - m.ny, e.clientX - m.left - m.nx));
+  angle = Math.atan2(e.clientY - m.top - m.ny, e.clientX - m.left - m.nx);
   aiming = true;
   startDraw();
 });
@@ -427,7 +428,7 @@ aimStage.addEventListener('keydown', (e) => {
   e.preventDefault();
   if (flying || aiming || attemptsLocked) return;
   const m = metrics();
-  angle = clampAngle(Math.atan2(m.ty - m.ny, m.tx - m.nx));
+  angle = Math.atan2(m.ty - m.ny, m.tx - m.nx);
   aiming = true;
   startDraw();
   setTimeout(release, reduceMotion ? 0 : DRAW_TIME + 60);
@@ -650,7 +651,7 @@ if (document.fonts && document.fonts.ready) document.fonts.ready.then(layoutAim)
 
 if (new URLSearchParams(location.search).has('record')){
   window.loveAPI = {
-    aimUp(){ const m = metrics(); angle = clampAngle(Math.atan2(m.ty - m.ny, m.tx - m.nx)); renderAim(m); },
+    aimUp(){ const m = metrics(); angle = Math.atan2(m.ty - m.ny, m.tx - m.nx); renderAim(m); },
     setDraw(px){ drawn = Math.max(0, px); renderAim(metrics()); },
     release(){ fire(); },
     shoot(){ if (flying) return; this.aimUp(); drawn = MAX_DRAW; renderAim(metrics()); fire(); },
