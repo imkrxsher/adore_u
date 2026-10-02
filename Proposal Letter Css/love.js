@@ -3,6 +3,7 @@ const $ = (id) => document.getElementById(id);
 const aimStage      = $('aimStage');
 const target        = $('target');
 const targetEnv     = target.querySelector('.envelope');
+const missPopup     = $('missPopup');
 const arrow         = $('arrow');
 const bow           = $('bow');
 const nockEl        = $('nock');
@@ -192,7 +193,6 @@ function closeLetter(){
 closeBtn.addEventListener('click', closeLetter);
 
 const DEFAULT_HINT = 'Hold to draw the bow — release to shoot ♡';
-const MISS_HINTS = ['So close — try again ♡', 'Aim for the heart ♡', 'Cupid never misses twice ♡'];
 const ARROW_LEN  = 56;
 
 const MIN_DRAW   = 6;
@@ -211,6 +211,7 @@ let angle = -Math.PI / 2;
 let aiming = false;
 let flying = false;
 let missCount = 0;
+let attemptsLocked = false;
 let drawn = 0;
 let rafId = 0;
 let drawRAF = 0;
@@ -251,7 +252,7 @@ function renderAim(m){
 }
 
 function updateAim(clientX, clientY){
-  if (flying) return;
+  if (flying || attemptsLocked) return;
   const m = metrics();
   angle = clampAngle(Math.atan2(clientY - m.top - m.ny, clientX - m.left - m.nx));
   if (!aiming) drawn = 0;
@@ -275,14 +276,15 @@ function drawStep(now){
 }
 
 function release(){
-  if (!aiming || flying) return;
+  if (!aiming || flying || attemptsLocked) return;
   aiming = false;
   cancelAnimationFrame(drawRAF); drawRAF = 0;
   fire();
 }
 
 function fire(power){
-  if (flying) return;
+  if (flying || attemptsLocked) return;
+  missPopup.hidden = true;
   if (power == null) power = clamp01((drawn - MIN_DRAW) / (MAX_DRAW - MIN_DRAW));
   flying = true;
   aiming = false;
@@ -294,7 +296,20 @@ function fire(power){
 
   if (reduceMotion){
     renderBow(angle * 180 / Math.PI, 1);
-    onHit(m);
+    const speed = BASE_SPEED + power * (MAX_SPEED - BASE_SPEED);
+    let vx = Math.cos(angle) * speed, vy = Math.sin(angle) * speed;
+    let tx = m.nx - Math.cos(angle) * launchDraw;
+    let ty = m.ny - Math.sin(angle) * launchDraw;
+    for (let frame = 0; frame < 600; frame++){
+      vy += GRAVITY;
+      tx += vx; ty += vy;
+      const dir = Math.atan2(vy, vx);
+      const tipx = tx + Math.cos(dir) * ARROW_LEN;
+      const tipy = ty + Math.sin(dir) * ARROW_LEN;
+      if (didHitTarget(tipx, tipy, m)){ onHit(m, dir); return; }
+      if (tipx < -80 || tipx > m.w + 80 || tipy < -80 || tipy > m.h + 80){ onMiss(); return; }
+    }
+    onMiss();
     return;
   }
 
@@ -302,7 +317,6 @@ function fire(power){
   let vx = Math.cos(angle) * speed, vy = Math.sin(angle) * speed;
   let tx = m.nx - Math.cos(angle) * launchDraw;
   let ty = m.ny - Math.sin(angle) * launchDraw;
-  const margin = HIT_MARGIN + missCount * 12;
   const t0 = performance.now();
   let frame = 0;
 
@@ -322,8 +336,7 @@ function fire(power){
     if ((frame++ & 1) === 0){
       spawnTrail(tx + cos * ARROW_LEN * 0.5, ty + sin * ARROW_LEN * 0.5);
     }
-    if (Math.abs(tipx - m.tx) <= m.thw + margin &&
-        Math.abs(tipy - m.ty) <= m.thh + margin){
+    if (didHitTarget(tipx, tipy, m)){
       onHit(m, dir); return;
     }
     if (tipx < -80 || tipx > m.w + 80 || tipy < -80 || tipy > m.h + 80){
@@ -332,6 +345,11 @@ function fire(power){
     rafId = requestAnimationFrame(step);
   }
   rafId = requestAnimationFrame(step);
+}
+
+function didHitTarget(tipx, tipy, m){
+  return Math.abs(tipx - m.tx) <= m.thw + HIT_MARGIN &&
+    Math.abs(tipy - m.ty) <= m.thh + HIT_MARGIN;
 }
 
 function clamp01(v){ return v < 0 ? 0 : v > 1 ? 1 : v; }
@@ -364,11 +382,17 @@ function onMiss(){
   cancelAnimationFrame(rafId);
   flying = false; drawn = 0;
   arrow.classList.remove('is-on');
-  hintText.textContent = MISS_HINTS[Math.min(missCount, MISS_HINTS.length - 1)];
-  missCount++;
-  if (missCount >= 2) target.classList.add('is-pulse');
+  if (missCount === 0){
+    missCount = 1;
+    missPopup.hidden = false;
+  } else {
+    missCount = 2;
+    attemptsLocked = true;
+    hintText.textContent = 'No more chances';
+    target.classList.add('is-pulse');
+  }
   setTimeout(() => {
-    if (flying) return;
+    if (flying || attemptsLocked) return;
     const m = metrics();
     angle = restAngle(m);
     renderAim(m);
@@ -379,6 +403,8 @@ function resetAim(){
   cancelAnimationFrame(rafId);
   cancelAnimationFrame(drawRAF); drawRAF = 0;
   flying = false; aiming = false; missCount = 0; drawn = 0;
+  attemptsLocked = false;
+  missPopup.hidden = true;
   target.classList.remove('is-hit', 'is-pulse');
   hintText.textContent = DEFAULT_HINT;
   const m = metrics();
@@ -388,7 +414,7 @@ function resetAim(){
 
 aimStage.addEventListener('pointermove', (e) => { if (!flying) updateAim(e.clientX, e.clientY); });
 aimStage.addEventListener('pointerdown', (e) => {
-  if (flying) return;
+  if (flying || attemptsLocked) return;
   const m = metrics();
   angle = clampAngle(Math.atan2(e.clientY - m.top - m.ny, e.clientX - m.left - m.nx));
   aiming = true;
@@ -399,7 +425,7 @@ window.addEventListener('pointerup', release);
 aimStage.addEventListener('keydown', (e) => {
   if (e.key !== ' ' && e.key !== 'Enter') return;
   e.preventDefault();
-  if (flying || aiming) return;
+  if (flying || aiming || attemptsLocked) return;
   const m = metrics();
   angle = clampAngle(Math.atan2(m.ty - m.ny, m.tx - m.nx));
   aiming = true;

@@ -205,6 +205,28 @@ body{
 .target.is-pulse .envelope{ outline:3px dashed var(--red); outline-offset:8px; }
 .target.is-hit .envelope{ animation:hitwobble .45s ease; }
 
+.miss-popup{
+  position:absolute;
+  z-index:8;
+  top:44%; left:50%;
+  transform:translate(-50%,-50%);
+  padding:12px 18px;
+  border:3px solid var(--coral);
+  border-radius:6px;
+  background:var(--paper);
+  color:var(--maroon);
+  font-family:var(--font-pix);
+  font-size:.75rem;
+  box-shadow:0 5px 0 var(--coral-dk), 0 12px 24px rgba(122,34,48,.2);
+  animation:missPopupIn .2s var(--ease) both;
+  pointer-events:none;
+}
+.miss-popup[hidden]{ display:none; }
+@keyframes missPopupIn{
+  from{ opacity:0; transform:translate(-50%,-42%) scale(.88); }
+  to{ opacity:1; transform:translate(-50%,-50%) scale(1); }
+}
+
 .envelope__flap{
   position:absolute; left:50%; top:0;
   transform:translateX(-50%);
