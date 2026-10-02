@@ -133,9 +133,10 @@ body{
 .love-balloon:focus-visible{ outline:2px dashed var(--maroon); outline-offset:5px; }
 @keyframes balloonRise{
   0%{ opacity:0; transform:translate3d(0,0,0) rotate(-8deg) scale(.8); }
-  12%{ opacity:.88; }
-  50%{ transform:translate3d(22px,-55vh,0) rotate(8deg) scale(1); }
-  100%{ opacity:0; transform:translate3d(-14px,-115vh,0) rotate(-7deg) scale(1.08); }
+  12%{ opacity:.18; transform:translate3d(8px,-14vh,0) rotate(-2deg) scale(.88); }
+  26%{ opacity:.82; transform:translate3d(22px,-30vh,0) rotate(8deg) scale(1); }
+  82%{ opacity:.82; transform:translate3d(-8px,-94vh,0) rotate(-3deg) scale(1.04); }
+  100%{ opacity:0; transform:translate3d(-14px,-120vh,0) rotate(-7deg) scale(1.08); }
 }
 .confetti__layer{ position:absolute; inset:0; will-change:transform; }
 .confetti .heart{

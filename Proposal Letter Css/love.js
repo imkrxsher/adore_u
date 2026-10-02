@@ -148,7 +148,7 @@ function spawnLoveBalloon(){
   balloon.style.width = balloon.style.height = `${size}px`;
   balloon.style.left = `${rand(3, 97)}vw`;
   balloon.style.background = pick(LOVE_COLORS);
-  balloon.style.animationDuration = `${rand(11, 17).toFixed(1)}s`;
+  balloon.style.animationDuration = `${rand(23, 31).toFixed(1)}s`;
 
   balloon.addEventListener('click', () => {
     const rect = balloon.getBoundingClientRect();
@@ -610,7 +610,7 @@ function reset(){
 drawSprite(catCanvas, CAT_IDLE);
 spawnConfetti(reduceMotion ? 0.5 : 1);
 spawnLoveBalloon();
-setInterval(spawnLoveBalloon, 1500);
+setInterval(spawnLoveBalloon, 2200);
 
 if (!reduceMotion){
   window.addEventListener('pointermove', onParallax, { passive: true });
