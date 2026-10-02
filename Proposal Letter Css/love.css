@@ -556,6 +556,7 @@ body{
   transition:opacity .5s ease .15s, transform .5s var(--ease) .15s;
 }
 .final.is-show{ opacity:1; transform:none; }
+.final__name{ font-family:"Inter", sans-serif; }
 .final strong{ font-weight:700; }
 .final mark{
   background:var(--sel);
