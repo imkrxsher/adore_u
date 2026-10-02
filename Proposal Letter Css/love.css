@@ -78,15 +78,9 @@ body{
 .fx__grain{
   position:absolute; inset:0;
   background:url("./textures/grain.png") repeat;
-  background-size:180px 180px;
-  opacity:.4;
+  background-size:220px 220px;
+  opacity:.28;
   mix-blend-mode:multiply;
-  animation:grainShift 5s steps(4) infinite;
-}
-@keyframes grainShift{
-  0%{ transform:translate(0,0); }   25%{ transform:translate(-2%,1%); }
-  50%{ transform:translate(1%,-2%); } 75%{ transform:translate(-1%,-1%); }
-  100%{ transform:translate(0,0); }
 }
 
 .scene{
@@ -119,7 +113,6 @@ body{
   pointer-events:auto;
   filter:drop-shadow(0 4px 5px rgba(122,34,48,.2));
   animation:balloonRise linear forwards;
-  will-change:transform,opacity;
 }
 .love-balloon::after{
   content:"";

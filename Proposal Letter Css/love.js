@@ -111,14 +111,12 @@ const CONFETTI_COLORS = ['#e8546a', '#f08aa0', '#d83a52', '#f6b3c2', '#c83048'];
 const PARALLAX = [];
 function spawnConfetti(scale = 1){
   const LAYERS = [
-    { n: 22, factor: 7,  min: 5,  max: 9,  blur: 1.6, op: .5 },
-    { n: 24, factor: 16, min: 7,  max: 13, blur: 0,   op: .9 },
-    { n: 18, factor: 30, min: 10, max: 18, blur: 0,   op: 1  },
+    { n: 12, factor: 8,  min: 5, max: 8,  op: .6 },
+    { n: 14, factor: 18, min: 7, max: 11, op: .9 },
   ];
   for (const L of LAYERS){
     const layer = document.createElement('div');
     layer.className = 'confetti__layer';
-    if (L.blur) layer.style.filter = `blur(${L.blur}px)`;
     layer.style.opacity = L.op;
     const count = Math.round(L.n * scale);
     for (let i = 0; i < count; i++){
@@ -139,7 +137,7 @@ function spawnConfetti(scale = 1){
 }
 
 function spawnLoveBalloon(){
-  if (loveBalloons.childElementCount >= 10) return;
+  if (loveBalloons.childElementCount >= 6) return;
 
   const balloon = document.createElement('button');
   const size = rand(30, 46);
@@ -637,7 +635,7 @@ function reset(){
 drawSprite(catCanvas, CAT_IDLE);
 spawnConfetti(reduceMotion ? 0.5 : 1);
 spawnLoveBalloon();
-setInterval(spawnLoveBalloon, 2200);
+setInterval(spawnLoveBalloon, 3200);
 
 if (!reduceMotion){
   window.addEventListener('pointermove', onParallax, { passive: true });
