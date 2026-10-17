@@ -186,6 +186,7 @@ body{
   display:flex; align-items:center; justify-content:center; gap:.4em;
   text-align:center;
 }
+.target__label-text{ text-align:center; }
 
 .envelope{
   position:relative;
