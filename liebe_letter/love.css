@@ -474,7 +474,7 @@ body{
   border-bottom:4px solid var(--coral);
 }
 .titlebar__name{
-  font-family:var(--font-pix);
+  font-family:"Press Start 2P", "DotGothic16", monospace;
   font-size:.72rem;
   letter-spacing:.12em;
   color:var(--maroon);

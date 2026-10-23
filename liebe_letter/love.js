@@ -24,6 +24,7 @@ const photoCloseBtn = $('photoCloseBtn');
 const confettiBox   = $('confetti');
 const rainBox       = $('rain');
 const loveBalloons  = $('loveBalloons');
+const catWarning    = $('catWarning');
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -516,7 +517,9 @@ function sayYes(){
 
   content.classList.add('is-won');
   win.classList.add('is-celebrate');
+  catWarning.hidden = true;
   if (!reduceMotion){ heartBurst(); celebrate(); }
+  else catWarning.hidden = false;
 }
 
 function confirmYes(){
@@ -621,6 +624,7 @@ function confettiTick(){
     if (o <= 0 || p.y > H + 120){ p.el.remove(); confetti.splice(i, 1); }
   }
   if (confetti.length) confettiRAF = requestAnimationFrame(confettiTick);
+  else if (!confettiTimer) catWarning.hidden = false;
 }
 
 function celebrate(){
@@ -651,6 +655,7 @@ function blink(){
 function reset(){
   catState = 'idle';
   yesClickCount = 0;
+  catWarning.hidden = true;
   title.textContent = INITIAL_TITLE;
   drawSprite(catCanvas, CAT_IDLE);
   catCanvas.setAttribute('role', 'img');
