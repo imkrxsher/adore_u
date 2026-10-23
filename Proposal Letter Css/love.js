@@ -14,6 +14,11 @@ const content       = $('content');
 const title         = $('title');
 const INITIAL_TITLE = 'Do you still remember me?';
 const catCanvas     = $('cat');
+const catTrigger    = $('catTrigger');
+const photoMenu     = $('photoMenu');
+const photoMenuClose = $('photoMenuClose');
+const photoImage    = $('photoImage');
+const photoFallback = $('photoFallback');
 const buttons       = $('buttons');
 const yesBtn        = $('yesBtn');
 const noBtn         = $('noBtn');
@@ -189,6 +194,14 @@ function closeLetter(){
 }
 
 closeBtn.addEventListener('click', closeLetter);
+
+catTrigger.addEventListener('click', () => photoMenu.showModal());
+photoMenuClose.addEventListener('click', () => photoMenu.close());
+photoMenu.addEventListener('close', () => catTrigger.focus({ preventScroll: true }));
+photoImage.addEventListener('error', () => {
+  photoImage.hidden = true;
+  photoFallback.hidden = false;
+});
 
 const DEFAULT_HINT = 'Hold to draw the bow — release to shoot ♡';
 const ARROW_LEN  = 56;
