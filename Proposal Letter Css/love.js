@@ -19,6 +19,8 @@ const yesBtn        = $('yesBtn');
 const noBtn         = $('noBtn');
 const finalText     = $('final');
 const closeBtn      = $('closeBtn');
+const closePhoto    = $('closePhoto');
+const photoCloseBtn = $('photoCloseBtn');
 const confettiBox   = $('confetti');
 const rainBox       = $('rain');
 const loveBalloons  = $('loveBalloons');
@@ -185,10 +187,17 @@ function closeLetter(){
   aimStage.classList.remove('is-gone');
   reset();
   resetAim();
-  setTimeout(() => aimStage.focus({ preventScroll: true }), reduceMotion ? 0 : 420);
+  closePhoto.hidden = false;
+  closePhoto.setAttribute('aria-hidden', 'false');
+  setTimeout(() => photoCloseBtn.focus({ preventScroll: true }), reduceMotion ? 0 : 420);
 }
 
 closeBtn.addEventListener('click', closeLetter);
+photoCloseBtn.addEventListener('click', () => {
+  closePhoto.hidden = true;
+  closePhoto.setAttribute('aria-hidden', 'true');
+  aimStage.focus({ preventScroll: true });
+});
 
 const DEFAULT_HINT = 'Hold to draw the bow — release to shoot ♡';
 const ARROW_LEN  = 56;
