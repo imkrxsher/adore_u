@@ -564,7 +564,7 @@ function spawnBurst(parent, cx, cy, n = 18){
   }
 }
 
-function heartBurst(n = 22){
+function heartBurst(n = 12){
   spawnBurst(content,
     catCanvas.offsetLeft + catCanvas.offsetWidth / 2,
     catCanvas.offsetTop  + catCanvas.offsetHeight / 2, n);
@@ -591,12 +591,12 @@ function addConfetti(x, y, vx, vy, size){
   el.style.width = el.style.height = size.toFixed(0) + 'px';
   el.style.background = pick(LOVE_COLORS);
   rainBox.appendChild(el);
-  confetti.push({ el, x, y, vx, vy, rot: rand(0, 360), vrot: rand(-7, 7), age: 0, life: rand(2.6, 3.6) });
+  confetti.push({ el, x, y, vx, vy, rot: rand(0, 360), vrot: rand(-7, 7), age: 0, life: rand(1.8, 2.4) });
 }
 
 function confettiBurst(){
   const W = innerWidth, H = innerHeight;
-  const n = confScale < 0.7 ? 4 : 5;
+  const n = confScale < 0.7 ? 2 : 3;
   popper(-14,    H + 14, -Math.PI * 0.34, n);
   popper(W + 14, H + 14, -Math.PI * 0.66, n);
   popper(W / 2,  H + 14, -Math.PI * 0.50, n);
@@ -606,7 +606,7 @@ function popper(x, y, ang, n){
   for (let i = 0; i < n; i++){
     const a  = ang + rand(-0.42, 0.42);
     const sp = rand(14, 21) * confScale;
-    addConfetti(x, y, Math.cos(a) * sp, Math.sin(a) * sp, rand(48, 96) * confScale);
+    addConfetti(x, y, Math.cos(a) * sp, Math.sin(a) * sp, rand(28, 56) * confScale);
   }
 }
 
@@ -631,12 +631,12 @@ function celebrate(){
   clearInterval(confettiTimer);
   confScale = Math.max(0.5, Math.min(1.15, Math.min(innerWidth, innerHeight) / 900));
   confettiBurst();
-  let t = 0;
+  let waves = 0;
   confettiTimer = setInterval(() => {
-    t += 360;
+    waves += 1;
     confettiBurst();
-    if (t >= 2700){ clearInterval(confettiTimer); confettiTimer = 0; }
-  }, 360);
+    if (waves >= 4){ clearInterval(confettiTimer); confettiTimer = 0; }
+  }, 460);
   if (!confettiRAF) confettiRAF = requestAnimationFrame(confettiTick);
 }
 
