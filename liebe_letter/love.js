@@ -21,6 +21,7 @@ const finalText     = $('final');
 const closeBtn      = $('closeBtn');
 const closePhoto    = $('closePhoto');
 const photoCloseBtn = $('photoCloseBtn');
+let photoHistoryEntry = false;
 const confettiBox   = $('confetti');
 const rainBox       = $('rain');
 const loveBalloons  = $('loveBalloons');
@@ -190,6 +191,10 @@ function closeLetter(){
   resetAim();
   closePhoto.hidden = false;
   closePhoto.setAttribute('aria-hidden', 'false');
+  if (!photoHistoryEntry){
+    history.pushState({ adorePhotoOpen: true }, '', location.href);
+    photoHistoryEntry = true;
+  }
   closePhoto.classList.remove('is-pop');
   void closePhoto.offsetWidth;
   closePhoto.classList.add('is-pop');
@@ -197,11 +202,32 @@ function closeLetter(){
 }
 
 closeBtn.addEventListener('click', closeLetter);
-photoCloseBtn.addEventListener('click', () => {
+function hidePhoto(){
   closePhoto.hidden = true;
   closePhoto.classList.remove('is-pop');
   closePhoto.setAttribute('aria-hidden', 'true');
   aimStage.focus({ preventScroll: true });
+}
+
+photoCloseBtn.addEventListener('click', () => {
+  hidePhoto();
+  if (photoHistoryEntry){
+    photoHistoryEntry = false;
+    const currentState = history.state;
+    history.replaceState(
+      currentState && typeof currentState === 'object'
+        ? { ...currentState, adorePhotoOpen: false }
+        : { adorePhotoOpen: false },
+      '',
+      location.href,
+    );
+  }
+});
+
+window.addEventListener('popstate', () => {
+  if (!photoHistoryEntry || closePhoto.hidden) return;
+  photoHistoryEntry = false;
+  hidePhoto();
 });
 
 const DEFAULT_HINT = 'Hold to draw the bow — release to shoot ♡';
