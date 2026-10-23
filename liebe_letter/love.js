@@ -518,7 +518,6 @@ function sayYes(){
 function confirmYes(){
   yesClickCount += 1;
   if (yesClickCount < 2){
-    yesBtn.textContent = 'YES (1/2)';
     yesBtn.setAttribute('aria-label', 'Click again to confirm');
     return;
   }
