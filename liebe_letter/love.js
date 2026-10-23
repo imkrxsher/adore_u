@@ -492,9 +492,11 @@ noBtn.addEventListener('focus', dodge);
 
 function sayYes(){
   catState = 'happy';
-  title.textContent = 'Happy Graduation! ♡ You are adorable!';
+  title.textContent = 'Happy Graduation! ♡ You are amazing, gorgeous,adorable!';
   drawSprite(catCanvas, CAT_HAPPY);
-  catCanvas.setAttribute('aria-label', 'A happy cat with a bow');
+  catCanvas.setAttribute('role', 'button');
+  catCanvas.setAttribute('aria-label', 'Show photo');
+  catCanvas.tabIndex = 0;
 
   buttons.hidden = true;
   finalText.hidden = false;
@@ -511,6 +513,18 @@ function sayYes(){
   win.classList.add('is-celebrate');
   if (!reduceMotion){ heartBurst(); celebrate(); }
 }
+
+function showPhotoFromCat(){
+  if (catState === 'happy') closeLetter();
+}
+
+catCanvas.addEventListener('click', showPhotoFromCat);
+catCanvas.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ' '){
+    e.preventDefault();
+    showPhotoFromCat();
+  }
+});
 
 yesBtn.addEventListener('click', sayYes);
 
@@ -624,7 +638,9 @@ function reset(){
   catState = 'idle';
   title.textContent = INITIAL_TITLE;
   drawSprite(catCanvas, CAT_IDLE);
+  catCanvas.setAttribute('role', 'img');
   catCanvas.setAttribute('aria-label', 'A little cat holding a heart');
+  catCanvas.removeAttribute('tabindex');
   buttons.hidden = false;
   finalText.hidden = true;
   finalText.classList.remove('is-show');

@@ -517,6 +517,7 @@ body{
 }
 
 .content.is-won .cat{
+  cursor:pointer;
   transform-origin:50% 88%;
   animation:catdance .8s ease-in-out infinite;
 }
