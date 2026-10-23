@@ -91,6 +91,18 @@ body{
   place-items:center;
   z-index:2;
 }
+.cat-warning{
+  position:fixed;
+  left:50%;
+  bottom:10px;
+  z-index:3;
+  max-width:calc(100vw - 24px);
+  transform:translateX(-50%);
+  color:var(--maroon);
+  font-size:.7rem;
+  text-align:center;
+  pointer-events:none;
+}
 
 .confetti{
   position:fixed; inset:0;
