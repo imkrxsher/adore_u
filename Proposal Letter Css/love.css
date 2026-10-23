@@ -469,8 +469,9 @@ body{
   cursor:pointer;
   transition:transform .12s ease, background .12s ease;
 }
+.winbtn--x{ background:var(--red); color:#fff; }
 .winbtn:hover{ transform:translateY(-1px); }
-.winbtn--x:hover{ background:var(--red); color:#fff; }
+.winbtn--x:hover{ background:var(--coral-dk); }
 .winbtn:focus-visible{ outline:2px solid var(--coral-dk); outline-offset:2px; }
 
 .heartrow{
