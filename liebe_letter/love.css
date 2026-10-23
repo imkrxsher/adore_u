@@ -384,6 +384,7 @@ body{
   padding:16px;
   background:rgba(34,29,28,.82);
 }
+.close-photo.is-pop{ animation:photoBackdrop .24s ease-out both; }
 .close-photo[hidden]{ display:none; }
 .close-photo__frame{
   width:fit-content;
@@ -392,6 +393,18 @@ body{
   max-height:calc(100svh - 32px);
   display:grid;
   place-items:center;
+}
+.close-photo.is-pop .close-photo__frame{
+  animation:photoPop .58s cubic-bezier(.16, 1.35, .48, 1) both;
+}
+@keyframes photoBackdrop{
+  from{ opacity:0; }
+  to{ opacity:1; }
+}
+@keyframes photoPop{
+  0%{ opacity:0; transform:scale(.45) rotate(-8deg); }
+  70%{ opacity:1; transform:scale(1.06) rotate(2deg); }
+  100%{ opacity:1; transform:scale(1) rotate(0); }
 }
 .close-photo__frame img{
   display:block;
@@ -655,6 +668,8 @@ body{
   .btn--yes::before,
   .content.is-won .cat,
   .content.is-won .cat-heart{ animation:none; }
+  .close-photo.is-pop,
+  .close-photo.is-pop .close-photo__frame{ animation:none; }
   .confetti .heart{ animation:none; opacity:.55; }
   .window, .stage--aim, .final, .btn{ transition-duration:.001s; }
   .burst, .trail, .rainheart, .confetti-heart{ display:none; }

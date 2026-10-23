@@ -189,12 +189,16 @@ function closeLetter(){
   resetAim();
   closePhoto.hidden = false;
   closePhoto.setAttribute('aria-hidden', 'false');
+  closePhoto.classList.remove('is-pop');
+  void closePhoto.offsetWidth;
+  closePhoto.classList.add('is-pop');
   setTimeout(() => photoCloseBtn.focus({ preventScroll: true }), reduceMotion ? 0 : 420);
 }
 
 closeBtn.addEventListener('click', closeLetter);
 photoCloseBtn.addEventListener('click', () => {
   closePhoto.hidden = true;
+  closePhoto.classList.remove('is-pop');
   closePhoto.setAttribute('aria-hidden', 'true');
   aimStage.focus({ preventScroll: true });
 });
