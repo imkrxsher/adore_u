@@ -444,6 +444,7 @@ aimStage.addEventListener('keydown', (e) => {
 window.addEventListener('resize', () => { if (!flying) renderAim(metrics()); });
 
 let yesScale = 1;
+let yesClickCount = 0;
 let catState = 'idle';
 
 function dodge(e){
@@ -514,6 +515,16 @@ function sayYes(){
   if (!reduceMotion){ heartBurst(); celebrate(); }
 }
 
+function confirmYes(){
+  yesClickCount += 1;
+  if (yesClickCount < 2){
+    yesBtn.textContent = 'YES (1/2)';
+    yesBtn.setAttribute('aria-label', 'Click again to confirm');
+    return;
+  }
+  sayYes();
+}
+
 function showPhotoFromCat(){
   if (catState === 'happy') closeLetter();
 }
@@ -526,7 +537,7 @@ catCanvas.addEventListener('keydown', (e) => {
   }
 });
 
-yesBtn.addEventListener('click', sayYes);
+yesBtn.addEventListener('click', confirmYes);
 
 function spawnBurst(parent, cx, cy, n = 18){
   for (let i = 0; i < n; i++){
@@ -636,12 +647,15 @@ function blink(){
 
 function reset(){
   catState = 'idle';
+  yesClickCount = 0;
   title.textContent = INITIAL_TITLE;
   drawSprite(catCanvas, CAT_IDLE);
   catCanvas.setAttribute('role', 'img');
   catCanvas.setAttribute('aria-label', 'A little cat holding a heart');
   catCanvas.removeAttribute('tabindex');
   buttons.hidden = false;
+  yesBtn.textContent = 'YES';
+  yesBtn.removeAttribute('aria-label');
   finalText.hidden = true;
   finalText.classList.remove('is-show');
   content.classList.remove('is-won');
